@@ -1,0 +1,253 @@
+Feature: User Authentication tests
+Background: 
+Given user navigates to the application
+
+
+@login
+
+Scenario: Login should be successful
+Given user navigates to the application
+# And Use enters the username as "Admin"
+# And User enters the password as "Admin123"
+When User click roshmi on the login button
+Then Login should run be success
+
+
+@login2
+
+Scenario: User requests a password reset
+    Given User navigates to the forgot password page
+    When User enters the username for password reset as "Admin"
+    Then A reset password link should be sent
+    Then A reset password link should be sent
+
+
+#    @login3
+
+#     Scenario: User clicks on the Shehan user span and navigates to AboutSupportChange
+#         Given User clicks on the Shehan user span
+#         When User clicks on AboutSupportChange
+#         Then The AboutSupportChange section should be visible
+ 
+
+@navigateSection
+
+Scenario: User navigates to a specific section
+    Given I am on the home page
+    When I navigate to the "Admin" section
+    Then I should see the "Admin" section
+
+
+
+@applyLeave
+
+Scenario: User applies for leave
+    Given User is logged in and on the Leave section
+    When User clicks on Apply
+    Then User should see the Apply Leave form
+
+@applyLeave2
+
+Scenario: User applies for leave with details
+    Given User is on the Apply Leave form
+    When User selects leave type and dates
+    And User fills in the reason for leave
+    Then User submits the leave application
+   
+
+//step file
+import { Given, When, Then, setDefaultTimeout } from "@cucumber/cucumber";
+
+import { expect } from "@playwright/test";
+import { fixture } from "../../hooks/pageFixture";
+import HomePage from "../../pages/homePage";
+
+let homePage: HomePage;
+setDefaultTimeout(60 * 1000 * 2)
+
+Given('user navigates to the application', async function () {
+    // await fixture.page.goto(process.env.BASEURL);
+    // fixture.logger.info("Navigated to the application")
+    // await fixture.page.waitForTimeout(5000);
+
+
+    await fixture.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+    await fixture.page.getByPlaceholder('Username').fill('Admin');
+    await fixture.page.getByPlaceholder('Password').click();
+    await fixture.page.getByPlaceholder('Password').fill('admin123');
+    await fixture.page.getByRole('button', { name: 'Login' }).click();
+    await fixture.page.getByRole('heading', { name: 'Dashboard' }).isVisible();
+    
+
+
+})
+
+// Given('User click on the login link', async function () {
+//      await fixture.page.locator("//button").click();
+//     // homePage = new HomePage();
+//     // await homePage.goToHomePage();
+// });
+
+Given('Use enters the username as {string}', async function (username) {
+    await fixture.page.locator(`//*[@id="app"]/div[1]/div/div[1]/div/div[2]/div[2]/form/div[1]/div/div[2]/input`).type(username);
+    await fixture.page.waitForTimeout(5000);
+});
+
+Given('User enters the password as {string}', async function (password) {
+    await fixture.page.locator(`//*[@id="app"]/div[1]/div/div[1]/div/div[2]/div[2]/form/div[2]/div/div[2]/input`).type(password);
+    await fixture.page.waitForTimeout(5000);
+})
+
+When('User click roshmi on the login button', async function () {
+    //await fixture. page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  await fixture.page.getByRole('button', { name: 'Login' }).click();
+    //await fixture.page.waitForLoadState();
+   // fixture.logger.info("Waiting for 2 seconds")
+  //  await fixture.page.waitForTimeout(2000);
+});
+
+
+Then('Login should run be success', async function () {
+    // const user = fixture.page.locator(`//*[@id="app"]/div[1]/div/div[1]/div/div[2]/div[2]/form/div[3]/button`);
+    // await expect(user).toBeVisible();
+    // const userName = await user.textContent();
+    // console.log("Username: " + userName);
+    // fixture.logger.info("Username: " + userName);
+
+    await fixture.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+    await fixture.page.getByText('Reset your password?').click();
+    if(await fixture.page.getByRole('heading', { name: 'Reset your Password' }).isVisible()){
+        console.log("Forgot Password page is visible");
+    }
+    else{
+        
+        console.log("Reset Password page is not visible");
+    }
+    await fixture.page.getByPlaceholder('Username').click();
+    await fixture.page.getByPlaceholder('Username').fill('admin');
+    await fixture.page.getByRole('button', { name: 'Reset Password' }).click();
+    if(await fixture.page.getByRole('heading', { name: 'Reset Password link sent' }).isVisible()){
+        console.log("Reset Password link sent page is visible");
+    }
+    else{
+        await fixture.page.getByRole('button', { name: 'Forgot your  Password' }).click();
+        await expect(fixture.page.getByRole('heading', { name: 'Forgot your Password link sent' })).toBeVisible();
+  
+        console.log("Reset Password link sent page is not visible");
+    }
+})
+
+When('Login should fail', async function () {
+     const failureMesssage = fixture.page.locator("//*[@id=`app`]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/div[1]");
+     await expect(failureMesssage).toBeVisible();
+    
+  
+  
+});
+
+Given('User navigates to the forgot password page', async function () {
+    await fixture.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/requestPasswordResetCode');
+    await fixture.page.getByRole('heading', { name: 'Reset Password' }).isVisible();
+});
+
+When('User enters the username for password reset as {string}', async function (username) {
+    await fixture.page.getByPlaceholder('Username').fill(username);
+    await fixture.page.getByRole('button', { name: 'Reset Password' }).click();
+});
+
+Then('A reset password link should be sent', async function () {
+    await expect(fixture.page.getByRole('heading', { name: 'Reset Password link sent' })).toBeVisible();
+});
+
+Then('User should see the dashboard', async function () {
+    await expect(fixture.page.locator('h1')).toHaveText('Dashboard');
+    await expect(fixture.page.locator('.user-info')).toBeVisible();
+    await expect(fixture.page.locator('.user-stats')).toBeVisible();
+    await expect(fixture.page.locator('.recent-activities')).toBeVisible();
+});
+
+
+//login 3 
+Given('User clicks on the Shehan user span', async function () {
+    await fixture.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index');
+    await fixture.page.locator('span').filter({ hasText: 'Shehan user' }).click();
+});
+
+When('User clicks on AboutSupportChange', async function () {
+    await fixture.page.getByText('About').click();
+    await fixture.page.getByText('Support').click();
+    await fixture.page.getByText('Change').click();
+});
+
+Then('The AboutSupportChange section should be visible', async function () {
+    await expect(fixture.page.getByText('About')).toBeVisible();
+    await expect(fixture.page.getByText('Support')).toBeVisible();
+    await expect(fixture.page.getByText('Change')).toBeVisible();
+});
+
+Given('I am on the home page', async function () {
+    await fixture.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers');
+});
+
+When('I navigate to the {string} section', async function (sectionName: string) {
+    await fixture.page.getByLabel('Sidepanel').locator('div').filter({ hasText: sectionName }).click();
+});
+
+Then('I should see the {string} section', async function (sectionName: string) {
+    const section = await fixture.page.getByLabel('Sidepanel').locator('div').filter({ hasText: sectionName });
+    expect(await section.isVisible()).toBe(true);
+});
+
+
+
+
+
+Given('User is logged in and on the Leave section', async function () {
+    //await fixture.page.getByRole('button', { name: 'Login' }).click();
+    await fixture.page.getByRole('link', { name: 'Leave' }).click();
+});
+
+When('User clicks on Apply', async function () {
+    await fixture.page.locator('li').filter({ hasText: 'Apply' }).click();
+});
+
+Then('User should see the Apply Leave form', async function () {
+    await expect(fixture.page.getByRole('heading', { name: 'Apply Leave' })).toBeVisible();
+});
+
+
+// Given('User is logged in and on the the Leave section', async function () {
+//     await fixture.page.getByRole('button', { name: 'Login' }).click();
+//     await fixture.page.getByRole('link', { name: 'Leave' }).click();
+// });
+
+// When('User clicks on Apply', async function () {
+//     await fixture.page.getByRole('button', { name: 'Apply' }).click();
+// });
+
+// Then('User should see the Apply Leave form', async function () {
+//     await expect(fixture.page.getByRole('heading', { name: 'Apply Leave' })).toBeVisible();
+// });
+
+Given('User is on the Apply Leave form', async function () {
+    await fixture.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/leave/applyLeave');
+    await expect(fixture.page.getByRole('heading', { name: 'Apply Leave' })).toBeVisible();
+});
+
+When('User selects leave type and dates', async function () {
+    await fixture.page.locator('form i').first().click();
+    await fixture.page.getByRole('option', { name: 'CAN - FMLA' }).click();
+    await fixture.page.locator('form i').nth(2).click();
+    await fixture.page.getByText('6', { exact: true }).click();
+    await fixture.page.locator('form i').nth(3).click();
+    await fixture.page.getByText('7', { exact: true }).click();
+});
+
+When('User fills in the reason for leave', async function () {
+    await fixture.page.locator('textarea').click();
+    await fixture.page.locator('textarea').fill('sickness');
+});
+
+Then('User submits the leave application', async function () {
+    await fixture.page.getByRole('button', { name: 'Apply' }).click();
+});
