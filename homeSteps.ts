@@ -8,8 +8,9 @@ let homePage: HomePage;
 Given("user navigates to the OrangeHRM login page", async () => {
     homePage = new HomePage(fixture.page);
     await homePage.navigateToLoginPage();
-await fixture.page.waitForTimeout(5000);
-
+    await homePage.enterUsername("Admin");
+    await homePage.enterPassword("admin123");
+    await homePage.clickLoginButton();
 });
 
 When("header logo is visible", async () => {
@@ -78,6 +79,23 @@ Then("verify the dashboard heading",async()=>{
 Then("verify the upgrade button",async()=>{
     await homePage.validateUpgradeButton();
 });
-Then("verify the elements in dropdown menu ",async()=>{
+Then("verify the elements in dropdown menu",async()=>{
     await homePage.validateDropDownMenu();
+});
+// When("User clicks on the side panel", async () => {
+//     await homePage.clickSidePanel();
+// });
+Then("verify the elements in the sidepanel",async()=>{
+    await homePage.validateSidePanel();
+});
+Then("after verifying user closes the side panel",async()=>{
+    await homePage.clickSidePanel();
+});
+
+When("user clicks on the leave button", async () => {
+    await homePage.clickLeaveButton();
+
+});
+Then("user will validate all the elements in the leave",async()=>{
+    await homePage.validateLeaveElements();
 });

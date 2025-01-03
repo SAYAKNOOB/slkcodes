@@ -165,4 +165,66 @@ export default class HomePage {
       `//p[@class="oxd-userdropdown-name"]`
     );
   }
+
+  async clickSidePanel(){
+    const sidePanel = fixture.page.locator(`//button[@class="oxd-icon-button oxd-main-menu-button"]`);
+    await sidePanel.click();
+  }
+
+  async validateSidePanel(){  
+    const sidePanelElements = fixture.page.locator(`//input[@placeholder="Search"]`);
+    const searchElement = fixture.page.locator(`//input[@placeholder="Search"]`);
+    const adminElement = fixture.page.locator(`//span[text()="Admin"]`);
+    const pimElement = fixture.page.locator(`//span[text()="PIM"]`);
+    const leaveElement = fixture.page.locator(`//span[text()="Leave"]`);
+    const timeElement = fixture.page.locator(`//span[text()="Time"]`);
+    const recruitmentElement = fixture.page.locator(`//span[text()="Recruitment"]`);
+    const myInfoElement = fixture.page.locator(`//span[text()="My Info"]`);
+    const performanceElement = fixture.page.locator(`//span[text()="Performance"]`);
+    const dashboardElement = fixture.page.locator(`//span[text()="Dashboard"]`);
+    const directoryElement = fixture.page.locator(`//span[text()="Directory"]`);
+    const maintenanceElement = fixture.page.locator(`//span[text()="Maintenance"]`);
+    const claimElement = fixture.page.locator(`//span[text()="Claim"]`);
+    const buzzElement = fixture.page.locator(`//span[text()="Buzz"]`);
+
+    await expect(sidePanelElements).toBeVisible();
+    await expect(searchElement).toBeVisible();
+    await expect(adminElement).toBeVisible();
+    await expect(pimElement).toBeVisible();
+    await expect(leaveElement).toBeVisible();
+    await expect(timeElement).toBeVisible();
+    await expect(recruitmentElement).toBeVisible();
+    await expect(myInfoElement).toBeVisible();
+    await expect(performanceElement).toBeVisible();
+    await expect(dashboardElement).toBeVisible();
+    await expect(directoryElement).toBeVisible();
+    await expect(maintenanceElement).toBeVisible();
+    await expect(claimElement).toBeVisible();
+    await expect(buzzElement).toBeVisible();
+  }
+
+  async clickLeaveButton(){
+    const leaveButton = fixture.page.locator(`//span[text()="Leave"]`);
+    await leaveButton.click();
+  }
+
+  async validateLeaveElements(){
+    const apply = fixture.page.locator(`//a[text()="Apply"]`);
+    const myLeave = fixture.page.locator(`//a[text()="My Leave"]`);
+    const entitlements = fixture.page.locator(`//span[text()="Entitlements "]`);
+    const reports = fixture.page.locator(`//span[text()="Reports "]`);
+    const configure = fixture.page.locator(`//span[text()="Configure "]`);
+    const leaveList = fixture.page.locator(`//a[text()="Leave List"]`);
+    const assignLeave = fixture.page.locator(`//a[text()="Assign Leave"]`);
+
+    await expect(apply).toBeVisible();
+    await expect(myLeave).toBeVisible();
+    await expect(entitlements).toBeVisible();
+    await expect(reports).toBeVisible();
+    await expect(configure).toBeVisible();
+    await expect(leaveList).toBeVisible();
+    await expect(assignLeave).toBeVisible();
+  }
+
+  
 }
